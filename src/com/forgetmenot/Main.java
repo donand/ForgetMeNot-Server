@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/Main")
 public class Main extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+       String dio = "Dio non è mai pago";
     /**
      * @see HttpServlet#HttpServlet()
      */
