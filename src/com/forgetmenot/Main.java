@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 public class Main extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     String cane = "Caniiiiiiiiii";
+    String davide = "Ciao!";
     
     /**
      * @see HttpServlet#HttpServlet()
