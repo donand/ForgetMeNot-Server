@@ -18,6 +18,7 @@ public class Main extends HttpServlet {
     String valerio =  "Ciaoaciaosoa";
     String sara="caneeee";
     String ciao = "ciao";
+    String ciaone = "ciaone cani";
     /**
      * @see HttpServlet#HttpServlet()
      */
