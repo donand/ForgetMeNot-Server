@@ -15,6 +15,7 @@ public class Main extends HttpServlet {
 	private static final long serialVersionUID = 1L;
     String cane = "Caniiiiiiiiii";
     String davide = "Ciao!";
+    String valerio =  "Ciaoaciaosoa";
     
     /**
      * @see HttpServlet#HttpServlet()
