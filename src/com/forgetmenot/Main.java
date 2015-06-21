@@ -19,6 +19,13 @@ public class Main extends HttpServlet {
     String sara="caneeee";
     String ciao = "ciao";
     String ciaone = "ciaone cani";
+    
+    // STRINGA DELLA BESTEMMIA DI DAVIDE
+    String porcaputtanaladrarottainculo = "a";
+    
+    
+    
+    
     /**
      * @see HttpServlet#HttpServlet()
      */
