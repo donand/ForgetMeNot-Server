@@ -18,10 +18,7 @@ import org.json.simple.JSONObject;
  */
 @WebServlet("/GetPianteFromLuce")
 public class GetPianteFromLuce extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-	private static final String url = "jdbc:postgresql://localhost/postgres";
-    private static final String username = "postgres";
-    private static final String password = "postgres";  
+	private static final long serialVersionUID = 1L; 
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -59,7 +56,7 @@ public class GetPianteFromLuce extends HttpServlet {
         try{
         	
         	Class.forName("org.postgresql.Driver");
-    		Connection con = DriverManager.getConnection(url, username, password);
+    		Connection con = ConnectionManager.getConnection();
     		PreparedStatement stmt=con.prepareStatement("SELECT * FROM piante "+"WHERE luce=?");
     		stmt.setInt(1, luce);
     		ResultSet rs= stmt.executeQuery();
