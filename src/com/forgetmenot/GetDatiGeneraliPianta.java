@@ -37,6 +37,40 @@ public class GetDatiGeneraliPianta extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		String nomePianta=request.getParameter("nome");
+		try{
+        	Connection con = ConnectionManager.getConnection();
+    		PreparedStatement stmt=con.prepareStatement("SELECT * FROM pianta "+"WHERE nome=?");
+    		stmt.setString(1, nomePianta);
+    		ResultSet rs= stmt.executeQuery();
+    		//StringWriter out=new StringWriter();
+    		rs.next();
+    		System.out.println(rs.getString("nome"));
+    		JSONObject obj=new JSONObject();
+    		
+    		obj.put("nome",rs.getString("nome"));
+    		
+			obj.put("descrizione",rs.getString("descrizione"));
+			obj.put("immagine",rs.getString("immagine"));
+			obj.put("luce",rs.getInt("luce"));
+			obj.put("descrizioneAcqua",rs.getString("descrizioneAcqua"));
+			obj.put("descrizioneConcimazione",rs.getString("descrizioneConcimazione"));
+			System.out.println(obj.get("nome"));
+    		//String jsonText = out.toString();
+    		String jsonText = obj.toString();
+            System.out.print(jsonText);
+            OutputStreamWriter outR = new OutputStreamWriter(response.getOutputStream());
+            outR.write(jsonText);
+            outR.flush();
+            outR.close();
+            //out.close();
+            rs.close();
+            con.close();
+        }
+        catch(ClassNotFoundException e){
+        }
+        catch(SQLException e){
+        }
 	}
 
 	/**
@@ -44,7 +78,7 @@ public class GetDatiGeneraliPianta extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int length = request.getContentLength();
+		/*int length = request.getContentLength();
         byte[] input = new byte[length];
         
         ServletInputStream sin = request.getInputStream();
@@ -92,7 +126,7 @@ public class GetDatiGeneraliPianta extends HttpServlet {
         catch(ClassNotFoundException e){
         }
         catch(SQLException e){
-        }
+        }*/
 	}
 
 }

@@ -1,6 +1,7 @@
 package com.forgetmenot;
 
 import java.io.*;
+
 import java.sql.*;
 
 import javax.servlet.ServletException;
@@ -32,6 +33,38 @@ public class GetPianteFromLuce extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		int luce=Integer.parseInt(request.getParameter("luce"));
+		try{
+    		Connection con = ConnectionManager.getConnection();
+    		PreparedStatement stmt=con.prepareStatement("SELECT * FROM pianta "+"WHERE luce=?");
+    		stmt.setInt(1, luce);
+    		ResultSet rs= stmt.executeQuery();
+    		//StringWriter out=new StringWriter();
+    		
+    		JSONArray a=new JSONArray();
+    		while(rs.next()){
+    			JSONObject obj=new JSONObject();
+    			obj.put("nome",rs.getString("nome"));
+    			obj.put("immagine", rs.getString("immagine"));
+    	        //obj.writeJSONString(out);
+    	        a.add(obj);
+            }
+    		//String jsonText = out.toString();
+    		String jsonText = a.toString();
+    		
+            //System.out.print(jsonText);
+            OutputStreamWriter outR = new OutputStreamWriter(response.getOutputStream());
+            outR.write(jsonText);
+            outR.flush();
+            outR.close();
+            //out.close();
+            rs.close();
+            con.close();
+        }
+        catch(ClassNotFoundException e){
+        }
+        catch(SQLException e){
+        }
 	}
 
 	/**
@@ -39,7 +72,7 @@ public class GetPianteFromLuce extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		int length = request.getContentLength();
+		/*int length = request.getContentLength();
         byte[] input = new byte[length];
         
         ServletInputStream sin = request.getInputStream();
@@ -78,6 +111,6 @@ public class GetPianteFromLuce extends HttpServlet {
         catch(ClassNotFoundException e){
         }
         catch(SQLException e){
-        }
+        }*/
 	}
 }
