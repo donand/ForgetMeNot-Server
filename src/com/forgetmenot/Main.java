@@ -12,19 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/Main")
 public class Main extends HttpServlet {
-	private static final long serialVersionUID = 1L;
-    String cani = "Cani cani cani cani";
-    String davide = "Ciao!";
-    String valerio =  "Ciaoaciaosoa";
-    String sara="caneeee";
-    String ciao = "ciao";
-    String ciaone = "ciaone cani";
-    
-    // STRINGA DELLA BESTEMMIA DI DAVIDE
-    String porcaputtanaladrarottainculo = "a";
-    String cagnaccio ="davide è un cagnaccio";
-    
-    
+	private static final long serialVersionUID = 1L; 
     
     /**
      * @see HttpServlet#HttpServlet()
