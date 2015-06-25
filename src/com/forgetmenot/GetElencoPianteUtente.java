@@ -52,8 +52,8 @@ public class GetElencoPianteUtente extends HttpServlet {
 				+ "p2.dataultimofertilizzante as ultimoFertilizzante, "
 				+ "p4.acqua as intervalloAcqua, p4.intervalloconcimazione as intervalloConcimazione "
 				+ "FROM possessore as p1, possesso as p2, posseduta as p3, piante as p4"
-				+ "WHERE p1.idutente = ? and p1.idpossessore = p2.id and "
-				+ "p2.id = p3.idpossessore and p3.idpianta = p4.id";
+				+ "WHERE p1.idutente = ? and p1.idpossesso = p2.id and "
+				+ "p2.id = p3.idpossesso and p3.idpianta = p4.id";
 		
 		Connection conn = null;
 		try {
@@ -79,10 +79,10 @@ public class GetElencoPianteUtente extends HttpServlet {
 			stmt.close();
 			conn.close();
 		} catch (SQLException e) {
-			
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		catch (ClassNotFoundException e2) {
-			
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
 	
