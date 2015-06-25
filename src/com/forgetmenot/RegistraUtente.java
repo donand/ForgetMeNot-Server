@@ -19,6 +19,8 @@ import org.json.simple.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.forgetmenot.database.ConnectionManager;
+
 /**
  * Servlet implementation class RegistraUtente
  */
