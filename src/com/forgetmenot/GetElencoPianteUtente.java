@@ -54,6 +54,7 @@ public class GetElencoPianteUtente extends HttpServlet {
 				+ "p2.id = p3.idpossesso and p3.idpianta = p4.id";
 		
 		Connection conn = null;
+		
 		try {
 			conn = ConnectionManager.getConnection();
 			PreparedStatement stmt = conn.prepareStatement(queryElencoPiante);

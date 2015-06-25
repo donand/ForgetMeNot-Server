@@ -39,6 +39,7 @@ public class GetDettagliPiantaUser extends HttpServlet {
 		//prende come parametro l'id del Possesso(entità che collega un user alla sua pianta)
 		int id=Integer.parseInt(request.getParameter("id"));
 		try{
+			
         	Connection con = ConnectionManager.getConnection();
         	String query="SELECT possesso.indirizzo as indirizzo, possesso.GPSLat as gpslat, possesso.GPSLong as gpslong, "
         			+ "pianta.immagine as immagine, "
