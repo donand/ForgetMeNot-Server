@@ -54,6 +54,7 @@ public class AggiornaDataUltimaConcimazione extends HttpServlet {
 			e.printStackTrace();
 		} 
 		catch (JSONException e1) {
+			e1.printStackTrace();
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		} 
 		catch (ClassNotFoundException e2) {

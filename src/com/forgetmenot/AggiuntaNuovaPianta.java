@@ -51,10 +51,10 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 			JSONObject input = Utils.parseJSONObject(request);
 			conn = ConnectionManager.getConnection();
 			stmt = conn.createStatement();
-			insertPossessore = conn.prepareStatement("INSERT INTO possessore VALUES ?, ?");
-			insertPosseduta = conn.prepareStatement("INSERT INTO posseduta VALUES ?, ?");
+			insertPossessore = conn.prepareStatement("INSERT INTO possessore VALUES (?, ?)");
+			insertPosseduta = conn.prepareStatement("INSERT INTO posseduta VALUES (?, ?)");
 			insertPossesso = conn.prepareStatement("INSERT INTO possesso(nomeassegnato, "
-					+ "gpslat, gpslon, dataultimaacqua, dataultimofertilizzante, indirizzo) "
+					+ "gpslat, gpslong, dataultimaacqua, dataultimofertilizzante, indirizzo) "
 					+ "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
 			//Inizia la transazione
@@ -74,17 +74,18 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 			ResultSet generatedKeys = insertPossesso.getGeneratedKeys();
 			if (generatedKeys.next()) {
                 idPossesso = generatedKeys.getLong(1);
+                System.out.println("id: " + idPossesso);
             }
             else {
                 throw new SQLException("Creating user failed, no ID obtained.");
             }
 			
 			insertPossessore.setLong(1, idPossesso);
-			insertPossessore.setLong(2, input.getLong("utenteID"));
+			insertPossessore.setLong(2, input.getInt("utenteID"));
 			insertPossessore.executeUpdate();
 			
 			insertPosseduta.setLong(1, idPossesso);
-			insertPosseduta.setLong(2, input.getLong("piantaID"));
+			insertPosseduta.setLong(2, input.getInt("piantaID"));
 			insertPosseduta.executeUpdate();
 			
 			//Inserisco nuovamente le foreign key nella tabella "possesso"
@@ -102,7 +103,7 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		}
 		catch (SQLException e1) {
-			System.err.println("Error: "+e1.getMessage());
+			e1.printStackTrace();
 			if (conn != null) {
 				try {
 					System.err.println("Transaction is being "+"rolled back");
@@ -113,7 +114,7 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 			}//end if
 		}
 		catch (ClassNotFoundException e2) {
-			
+			e2.printStackTrace();
 		}
 		finally {
 			if (conn != null)
