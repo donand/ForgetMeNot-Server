@@ -1,7 +1,6 @@
 package com.forgetmenot;
 
 import java.io.BufferedReader;
-
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
@@ -18,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.forgetmenot.database.ConnectionManager;
+import com.forgetmenot.database.DatabaseUtils;
 
 /**
  * Servlet implementation class AggiuntaNuovaPianta
@@ -42,17 +44,25 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 		PreparedStatement insertPossessore = null;
 		PreparedStatement insertPosseduta = null;
 		PreparedStatement insertPossesso = null;
+		Statement stmt = null;
+		
 		try {
 			long idPossesso;
-			JSONObject input = parseJSON(request);
+			JSONObject input = Utils.parseJSONObject(request);
 			conn = ConnectionManager.getConnection();
+			stmt = conn.createStatement();
 			insertPossessore = conn.prepareStatement("INSERT INTO possessore VALUES ?, ?");
 			insertPosseduta = conn.prepareStatement("INSERT INTO posseduta VALUES ?, ?");
 			insertPossesso = conn.prepareStatement("INSERT INTO possesso(nomeassegnato, "
 					+ "gpslat, gpslon, dataultimaacqua, dataultimofertilizzante, indirizzo) "
 					+ "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			
+			//Inizia la transazione
 			conn.setAutoCommit(false);
+			
+			//Elimino le foreign key dalla tabella possesso
+			DatabaseUtils.dropFKConstraintsFromPossesso(stmt);
+			
 			insertPossesso.setString(1, input.getString("nome"));
 			insertPossesso.setDouble(2, input.getDouble("lat"));
 			insertPossesso.setDouble(3, input.getDouble("lon"));
@@ -77,9 +87,13 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 			insertPosseduta.setLong(2, input.getLong("piantaID"));
 			insertPosseduta.executeUpdate();
 			
+			//Inserisco nuovamente le foreign key nella tabella "possesso"
+			DatabaseUtils.addFKConstraintsToPossesso(stmt);
+			
 			conn.commit();
 			conn.setAutoCommit(true);
 			
+			stmt.close();
 			insertPossesso.close();
 			insertPossessore.close();
 			insertPosseduta.close();
@@ -104,6 +118,7 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 		finally {
 			if (conn != null)
 				try {
+					stmt.close();
 					insertPossesso.close();
 					insertPossessore.close();
 					insertPosseduta.close();
@@ -113,21 +128,5 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 					System.err.println(ex2.getMessage());
 				}
 		}
-	}
-
-	
-	//restituisce il JSON presente nel corpo della POST
-	private JSONObject parseJSON(HttpServletRequest request) throws IOException, JSONException {
-		StringBuilder sb = new StringBuilder();
-	    BufferedReader reader = request.getReader();
-	    try {
-	        String line;
-	        while ((line = reader.readLine()) != null) {
-	            sb.append(line).append('\n');
-	        }
-	    } finally {
-	        reader.close();
-	    }
-	    return new JSONObject(sb.toString());
 	}
 }

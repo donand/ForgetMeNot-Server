@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import com.forgetmenot.database.ConnectionManager;
+
 /**
  * Servlet implementation class GetDatiGeneraliPianta
  */
