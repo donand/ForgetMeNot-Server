@@ -1,4 +1,4 @@
-package com.forgetmenot;
+package com.forgetmenot.database;
 
 import java.sql.*;
 
