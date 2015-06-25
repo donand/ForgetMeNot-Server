@@ -55,6 +55,7 @@ public class RegistraUtente extends HttpServlet {
     		stmt=con.prepareStatement("INSERT into utente(email) VALUES (?)");
     		stmt.setString(1, input.getString("email"));
     		stmt.executeUpdate();
+    		
     		stmt.close();
     		con.close();
         }
