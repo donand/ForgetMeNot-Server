@@ -41,12 +41,13 @@ public class GetDettagliPiantaUser extends HttpServlet {
 		//prende come parametro l'id del Possesso(entità che collega un user alla sua pianta)
 		int id=Integer.parseInt(request.getParameter("id"));
 		try{
+			
         	Connection con = ConnectionManager.getConnection();
         	String query="SELECT possesso.indirizzo as indirizzo, possesso.GPSLat as gpslat, possesso.GPSLong as gpslong, "
         			+ "pianta.immagine as immagine, "
         			+ "pianta.descrizioneConcimazione as descrizioneConcimazione, pianta.descrizioneAcqua as descrizioneAcqua, "
-        			+ "pianta.luce as luce"
-        			+ "FROM possesso, posseduta, pianta"
+        			+ "pianta.luce as luce "
+        			+ "FROM possesso, posseduta, pianta "
         			+ "WHERE posseduta.idpossesso=? AND posseduta.idpossesso=possesso.id AND posseduta.idpianta=pianta.id";
         	
     		PreparedStatement stmt=con.prepareStatement(query);
