@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.json.simple.JSONObject;
 
+import com.forgetmenot.database.ConnectionManager;
 /**
  * Servlet implementation class GetDettagliPiantaUser
  */
@@ -39,12 +40,13 @@ public class GetDettagliPiantaUser extends HttpServlet {
 		//prende come parametro l'id del Possesso(entità che collega un user alla sua pianta)
 		int id=Integer.parseInt(request.getParameter("id"));
 		try{
+			
         	Connection con = ConnectionManager.getConnection();
         	String query="SELECT possesso.indirizzo as indirizzo, possesso.GPSLat as gpslat, possesso.GPSLong as gpslong, "
         			+ "pianta.immagine as immagine, "
         			+ "pianta.descrizioneConcimazione as descrizioneConcimazione, pianta.descrizioneAcqua as descrizioneAcqua, "
-        			+ "pianta.luce as luce"
-        			+ "FROM possesso, posseduta, pianta"
+        			+ "pianta.luce as luce, possesso.dataUltimaAcqua, possesso.dataUltimoFertilizzante, pianta.acqua, pianta.intervalloConcimazione "
+        			+ "FROM possesso, posseduta, pianta "
         			+ "WHERE posseduta.idpossesso=? AND posseduta.idpossesso=possesso.id AND posseduta.idpianta=pianta.id";
         	
     		PreparedStatement stmt=con.prepareStatement(query);
@@ -54,13 +56,15 @@ public class GetDettagliPiantaUser extends HttpServlet {
     		rs.next();
     		
     		JSONObject obj=new JSONObject();
-    		
-			obj.put("immagine",rs.getString("immagine"));
+    		obj.put("dataUltimaAcqua",rs.getString("dataUltimaAcqua"));
+			obj.put("dataUltimoFertilizzante",rs.getString("dataUltimoFertilizzante"));
+			obj.put("acqua", rs.getInt("acqua"));
+			obj.put("intervalloConcimazione", rs.getInt("intervalloConcimazione"));
 			obj.put("luce",rs.getInt("luce"));
 			obj.put("descrizioneAcqua",rs.getString("descrizioneAcqua"));
 			obj.put("descrizioneConcimazione",rs.getString("descrizioneConcimazione"));
 			obj.put("gpslat", rs.getFloat("GPSLat"));
-			obj.put("gpslong", "GPSLong");
+			obj.put("gpslong", rs.getFloat("GPSLong"));
 			obj.put("indirizzo", rs.getString("indirizzo"));
 			
     		//String jsonText = out.toString();
