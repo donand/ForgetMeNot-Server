@@ -46,7 +46,7 @@ public class GetDettagliPiantaUser extends HttpServlet {
         	String query="SELECT possesso.indirizzo as indirizzo, possesso.GPSLat as gpslat, possesso.GPSLong as gpslong, "
         			+ "pianta.immagine as immagine, "
         			+ "pianta.descrizioneConcimazione as descrizioneConcimazione, pianta.descrizioneAcqua as descrizioneAcqua, "
-        			+ "pianta.luce as luce "
+        			+ "pianta.luce as luce, possesso.dataUltimaAcqua, pianta.acqua, pianta.intervalloConcimazione "
         			+ "FROM possesso, posseduta, pianta "
         			+ "WHERE posseduta.idpossesso=? AND posseduta.idpossesso=possesso.id AND posseduta.idpianta=pianta.id";
         	
@@ -58,12 +58,14 @@ public class GetDettagliPiantaUser extends HttpServlet {
     		
     		JSONObject obj=new JSONObject();
     		
-			obj.put("immagine",rs.getString("immagine"));
+			obj.put("dataUltimaAcqua",rs.getString("dataUltimaAcqua"));
+			obj.put("acqua", rs.getInt("acqua"));
+			obj.put("intervalloConcimazione", rs.getInt("intervalloConcimazione"));
 			obj.put("luce",rs.getInt("luce"));
 			obj.put("descrizioneAcqua",rs.getString("descrizioneAcqua"));
 			obj.put("descrizioneConcimazione",rs.getString("descrizioneConcimazione"));
 			obj.put("gpslat", rs.getFloat("GPSLat"));
-			obj.put("gpslong", "GPSLong");
+			obj.put("gpslong", rs.getFloat("GPSLong"));
 			obj.put("indirizzo", rs.getString("indirizzo"));
 			
     		//String jsonText = out.toString();
