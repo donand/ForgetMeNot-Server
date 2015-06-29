@@ -9,9 +9,9 @@ public class ConnectionManager {
     
     private static boolean driverLoaded = false;
     private static final String MY_DRIVER = "org.postgresql.Driver";
-    private static final String MY_URL = "jdbc:postgresql://localhost/postgres";
+    private static final String MY_URL = "jdbc:postgresql://localhost/ForgetMeNot";
     private static final String LOGIN = "postgres";
-    private static final String PASSWD = "postgres";
+    private static final String PASSWD = "cagnaccio93";
     
 	public static Connection getConnection() throws SQLException, ClassNotFoundException {
 		if (!driverLoaded) {

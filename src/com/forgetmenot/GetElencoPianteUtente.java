@@ -71,8 +71,8 @@ public class GetElencoPianteUtente extends HttpServlet {
 				obj.put("nomeAssegnato", rs.getString("nomeAssegnato"));
 				obj.put("nomePianta", rs.getString("nomePianta"));
 				obj.put("immagine", rs.getString("immagine"));
-				obj.put("livelloAcqua", calcolaLivello(rs.getDate("ultimaAcqua"), rs.getInt("intervalloAcqua")));
-				obj.put("livelloConcimazione", calcolaLivello(rs.getDate("ultimoFertilizzante"), rs.getInt("intervalloConcimazione")));
+				obj.put("livelloAcqua", calcolaLivello(rs.getLong("ultimaAcqua"), rs.getInt("intervalloAcqua")));
+				obj.put("livelloConcimazione", calcolaLivello(rs.getLong("ultimoFertilizzante"), rs.getInt("intervalloConcimazione")));
 				result.add(obj);
 			}
 			
@@ -90,15 +90,32 @@ public class GetElencoPianteUtente extends HttpServlet {
 		}
 	}
 	
-	private int calcolaLivello(Date data, int intervallo) {
+	private int calcolaLivello(Long millis, int intervallo) {
+		/*
 		String s = data.toString();
-		int year=Integer.parseInt(s.substring(0, 4));
-		int month=Integer.parseInt(s.substring(5, 7));
-		int day=Integer.parseInt(s.substring(8, 10));
-		GregorianCalendar g = new GregorianCalendar(year, month, day), now = new GregorianCalendar();
+		int year = Integer.parseInt(s.substring(0, 4));
+		int month = Integer.parseInt(s.substring(5, 7));
+		int day = Integer.parseInt(s.substring(8, 10));
+		GregorianCalendar g = new GregorianCalendar(year, month, day);
+		GregorianCalendar now = new GregorianCalendar();
 		int result = (int) ((now.getTimeInMillis() - g.getTimeInMillis())/ (1000 * 60 * 60 * 24));
+		*/
+		Date now = new Date(new java.util.Date().getTime());
+		System.out.println("now: " + now.getTime() + "\nultima: " + millis);
 		
-		return (result < intervallo)? result : intervallo;
+		double result = ((double) (now.getTime() - millis))/ (1000 * 60 * 60 * 24);
+		System.out.println("result1: " + result);
+		//result è un double >= 0 e rappresenta il numero di giorni passati dall'ultima volta
+		result = (result < intervallo)? result : intervallo;
+		//ora ho result >= 0 && result <= intervallo
+		result = (result/intervallo)*10;
+		//ora result >= 0 && result <= 10
+		result = 10 - result;
+		System.out.println("result2: " + result);
+		
+		//result basso indica che deve essere innaffiata (o fertilizzata)
+		//result alto indica che è stata innaffiata da poco
+		return (int) Math.round(result);
 
 	}
 

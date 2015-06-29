@@ -7,14 +7,21 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
  
+
+import java.util.Date;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
  
+
+
 import org.json.simple.JSONObject;
  
+
+
 import com.forgetmenot.database.ConnectionManager;
 /**
  * Servlet implementation class GetDettagliPiantaUser
@@ -34,7 +41,8 @@ public class GetDettagliPiantaUser extends HttpServlet {
         /**
          * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
          */
-        protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        @SuppressWarnings("unchecked")
+		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
                 // TODO Auto-generated method stub
                
                 //prende come parametro l'id del Possesso(entità che collega un user alla sua pianta)
@@ -56,8 +64,8 @@ public class GetDettagliPiantaUser extends HttpServlet {
                 rs.next();
                
                 JSONObject obj=new JSONObject();
-                obj.put("dataUltimaAcqua",rs.getString("dataUltimaAcqua"));
-                        obj.put("dataUltimoFertilizzante",rs.getString("dataUltimoFertilizzante"));
+                obj.put("dataUltimaAcqua", new Date(rs.getLong("dataUltimaAcqua")).toString());
+                        obj.put("dataUltimoFertilizzante", new Date(rs.getLong("dataUltimoFertilizzante")).toString());
                         obj.put("acqua", rs.getInt("acqua"));
                         obj.put("intervalloConcimazione", rs.getInt("intervalloConcimazione"));
                         obj.put("luce",rs.getInt("luce"));

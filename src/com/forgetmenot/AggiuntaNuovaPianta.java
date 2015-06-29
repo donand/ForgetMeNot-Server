@@ -66,8 +66,8 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 			insertPossesso.setString(1, input.getString("nome"));
 			insertPossesso.setDouble(2, input.getDouble("lat"));
 			insertPossesso.setDouble(3, input.getDouble("lon"));
-			insertPossesso.setDate(4, new Date(new java.util.Date().getTime()));
-			insertPossesso.setDate(5, new Date(new java.util.Date().getTime()));
+			insertPossesso.setLong(4, new java.util.Date().getTime());
+			insertPossesso.setLong(5, new java.util.Date().getTime());
 			if (input.isNull("indirizzo"))
 				insertPossesso.setNull(6, java.sql.Types.VARCHAR);
 			else

@@ -44,7 +44,7 @@ public class AggiornaDataUltimaConcimazione extends HttpServlet {
 			updatePossesso = conn.prepareStatement("UPDATE possesso "
 					+ "SET dataultimofertilizzante = ? "
 					+ "WHERE id = ?");
-			updatePossesso.setDate(1, new java.sql.Date(new java.util.Date().getTime()));
+			updatePossesso.setLong(1, new java.util.Date().getTime());
 			updatePossesso.setInt(2, input.getInt("idPossesso"));
 			updatePossesso.executeUpdate();
 			
