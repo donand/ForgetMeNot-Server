@@ -70,6 +70,8 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 			insertPossesso.setDate(5, new Date(new java.util.Date().getTime()));
 			if (input.isNull("indirizzo"))
 				insertPossesso.setNull(6, java.sql.Types.VARCHAR);
+			else
+				insertPossesso.setString(6, input.getString("indirizzo"));
 			insertPossesso.executeUpdate();
 			ResultSet generatedKeys = insertPossesso.getGeneratedKeys();
 			if (generatedKeys.next()) {

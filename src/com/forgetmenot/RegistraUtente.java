@@ -7,6 +7,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletInputStream;
@@ -48,23 +49,43 @@ public class RegistraUtente extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-        Connection con=null;
-        PreparedStatement stmt=null;
+        Connection con = null;
+        PreparedStatement stmt = null, stmt1 = null;long id = -1;
         try{
-        	JSONObject input=parseJSON(request);
+        	JSONObject input = Utils.parseJSONObject(request);
         	
     		con = ConnectionManager.getConnection();
-    		stmt=con.prepareStatement("INSERT into utente(email) VALUES (?)");
-    		stmt.setString(1, input.getString("email"));
-    		stmt.executeUpdate();
+    		stmt1 = con.prepareStatement("SELECT id "
+    				+ "FROM utente "
+    				+ "WHERE email = ?");
+    		stmt1.setString(1, input.getString("email"));
+    		ResultSet idList = stmt1.executeQuery();
+    		if (idList.next())
+    			id = idList.getLong("id");
+    		else {
+    			stmt = con.prepareStatement("INSERT into utente(email) VALUES (?)", 
+    					Statement.RETURN_GENERATED_KEYS);
+    			stmt.setString(1, input.getString("email"));
+    			stmt.executeUpdate();
     		
-    		stmt.close();
-    		con.close();
+    			ResultSet generatedKeys = stmt.getGeneratedKeys();
+    			if (generatedKeys.next()) {
+    				id = generatedKeys.getLong(1);
+    				System.out.println("id: " + id);
+    			}
+    			else {
+    				throw new SQLException("Creating user failed, no ID obtained.");
+    			}
+    		}
+    		
+			JSONObject res = new JSONObject();
+			res.put("id", id);
+			response.getWriter().write(res.toString());
         }
         catch(ClassNotFoundException e){
         }
         catch(JSONException e){
-        	
+        	response.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
         catch(SQLException e){
         	System.err.println("Error: "+e.getMessage());
@@ -75,32 +96,19 @@ public class RegistraUtente extends HttpServlet {
 				} catch (SQLException excep) {
 					System.err.println("Error: "+excep.getMessage());
 				}
-			}//end if
+			}
         }
         finally {
 			if (con != null)
 				try {
-					stmt.close();
+					if (stmt != null)
+						stmt.close();
+					stmt1.close();
 					con.close();
 				} catch (SQLException ex2) {
 					System.err.println(ex2.getMessage());
 				}
 		}
 	}
-	
-	//restituisce il JSON presente nel corpo della POST
-		private JSONObject parseJSON(HttpServletRequest request) throws IOException, JSONException {
-			StringBuilder sb = new StringBuilder();
-		    BufferedReader reader = request.getReader();
-		    try {
-		        String line;
-		        while ((line = reader.readLine()) != null) {
-		            sb.append(line).append('\n');
-		        }
-		    } finally {
-		        reader.close();
-		    }
-		    return new JSONObject(sb.toString());
-		}
 
 }
