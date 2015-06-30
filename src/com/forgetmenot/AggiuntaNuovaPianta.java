@@ -44,7 +44,9 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 		PreparedStatement insertPossessore = null;
 		PreparedStatement insertPosseduta = null;
 		PreparedStatement insertPossesso = null;
+		PreparedStatement queryIDPianta = null;
 		Statement stmt = null;
+		long idPianta = -1;
 		
 		try {
 			long idPossesso;
@@ -56,6 +58,10 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 			insertPossesso = conn.prepareStatement("INSERT INTO possesso(nomeassegnato, "
 					+ "gpslat, gpslong, dataultimaacqua, dataultimofertilizzante, indirizzo) "
 					+ "VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			queryIDPianta = conn.prepareStatement("SELECT id "
+					+ "FROM pianta "
+					+ "WHERE nome = ?");
+			
 			
 			//Inizia la transazione
 			conn.setAutoCommit(false);
@@ -63,7 +69,13 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 			//Elimino le foreign key dalla tabella possesso
 			DatabaseUtils.dropFKConstraintsFromPossesso(stmt);
 			
-			insertPossesso.setString(1, input.getString("nome"));
+			//prendo l'id del tipo di pianta
+			queryIDPianta.setString(1, input.getString("nomeGenerale"));
+			ResultSet rs = queryIDPianta.executeQuery();
+			if (rs.next())
+				idPianta = rs.getLong("id");
+			
+			insertPossesso.setString(1, input.getString("nomeAssegnato"));
 			insertPossesso.setDouble(2, input.getDouble("lat"));
 			insertPossesso.setDouble(3, input.getDouble("lon"));
 			insertPossesso.setLong(4, new java.util.Date().getTime());
@@ -87,7 +99,7 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 			insertPossessore.executeUpdate();
 			
 			insertPosseduta.setLong(1, idPossesso);
-			insertPosseduta.setLong(2, input.getInt("piantaID"));
+			insertPosseduta.setLong(2, idPianta);
 			insertPosseduta.executeUpdate();
 			
 			//Inserisco nuovamente le foreign key nella tabella "possesso"
@@ -100,6 +112,7 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 			insertPossesso.close();
 			insertPossessore.close();
 			insertPosseduta.close();
+			queryIDPianta.close();
 			conn.close();
 		} catch (JSONException e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
@@ -114,6 +127,7 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 					System.err.println("Error: "+excep.getMessage());
 				}
 			}//end if
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 		catch (ClassNotFoundException e2) {
 			e2.printStackTrace();
