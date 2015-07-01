@@ -48,10 +48,13 @@ public class AggiornaDataUltimaConcimazione extends HttpServlet {
 			updatePossesso.setInt(2, input.getInt("idPossesso"));
 			updatePossesso.executeUpdate();
 			
+			response.getWriter().write(new JSONObject().toString());
+			
 			updatePossesso.close();
 			conn.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		} 
 		catch (JSONException e1) {
 			e1.printStackTrace();

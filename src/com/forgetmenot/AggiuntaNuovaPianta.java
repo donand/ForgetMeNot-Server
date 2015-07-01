@@ -108,6 +108,8 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 			conn.commit();
 			conn.setAutoCommit(true);
 			
+			response.getWriter().write(new JSONObject().toString());
+			
 			stmt.close();
 			insertPossesso.close();
 			insertPossessore.close();
