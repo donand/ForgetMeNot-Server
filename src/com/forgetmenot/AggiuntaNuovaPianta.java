@@ -102,21 +102,21 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 			insertPosseduta.setLong(2, idPianta);
 			insertPosseduta.executeUpdate();
 			
-			//Inserisco nuovamente le foreign key nella tabella "possesso"
-			DatabaseUtils.addFKConstraintsToPossesso(stmt);
-			
 			conn.commit();
 			conn.setAutoCommit(true);
 			
 			response.getWriter().write(new JSONObject().toString());
 			
-			stmt.close();
-			insertPossesso.close();
-			insertPossessore.close();
-			insertPosseduta.close();
-			queryIDPianta.close();
-			conn.close();
 		} catch (JSONException e) {
+			e.printStackTrace();
+			if (conn != null) {
+				try {
+					System.err.println("Transaction is being "+"rolled back");
+					conn.rollback();
+				} catch (SQLException excep) {
+					System.err.println("Error in AggiuntaPianta: "+excep.getMessage());
+				}
+			}//end if
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		}
 		catch (SQLException e1) {
@@ -126,7 +126,7 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 					System.err.println("Transaction is being "+"rolled back");
 					conn.rollback();
 				} catch (SQLException excep) {
-					System.err.println("Error: "+excep.getMessage());
+					System.err.println("Error in AggiuntaPianta: "+excep.getMessage());
 				}
 			}//end if
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -137,6 +137,9 @@ public class AggiuntaNuovaPianta extends HttpServlet {
 		finally {
 			if (conn != null)
 				try {
+					//Inserisco nuovamente le foreign key nella tabella "possesso"
+					DatabaseUtils.addFKConstraintsToPossesso(stmt);
+					
 					stmt.close();
 					insertPossesso.close();
 					insertPossessore.close();
