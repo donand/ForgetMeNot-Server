@@ -57,6 +57,10 @@ public class GetDatiGeneraliPianta extends HttpServlet {
 			obj.put("luce",rs.getInt("luce"));
 			obj.put("descrizioneAcqua",rs.getString("descrizioneAcqua"));
 			obj.put("descrizioneConcimazione",rs.getString("descrizioneConcimazione"));
+			obj.put("fioritura",rs.getString("fioritura"));
+            obj.put("potatura",rs.getString("potatura"));
+            obj.put("terreno",rs.getString("terreno"));
+            
 			System.out.println(obj.get("nome"));
     		//String jsonText = out.toString();
     		String jsonText = obj.toString();
@@ -72,6 +76,8 @@ public class GetDatiGeneraliPianta extends HttpServlet {
         catch(ClassNotFoundException e){
         }
         catch(SQLException e){
+        	e.printStackTrace();
+        	response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
 	}
 
