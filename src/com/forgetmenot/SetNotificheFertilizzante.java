@@ -17,16 +17,16 @@ import org.json.JSONObject;
 import com.forgetmenot.database.ConnectionManager;
 
 /**
- * Servlet implementation class AggiornaDataUltimaAcqua
+ * Servlet implementation class SetNotificheFertilizzante
  */
-@WebServlet("/AggiornaDataUltimaAcqua")
-public class AggiornaDataUltimaAcqua extends HttpServlet {
+@WebServlet("/SetNotificheFertilizzante")
+public class SetNotificheFertilizzante extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AggiornaDataUltimaAcqua() {
+    public SetNotificheFertilizzante() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,32 +36,35 @@ public class AggiornaDataUltimaAcqua extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		Connection conn = null;
-		PreparedStatement updatePossesso = null;
+		PreparedStatement setNotifiche = null;
 		
 		try {
 			JSONObject input = Utils.parseJSONObject(request);
 			conn = ConnectionManager.getConnection();
-			updatePossesso = conn.prepareStatement("UPDATE possesso "
-					+ "SET dataultimaacqua = ? "
+			setNotifiche = conn.prepareStatement("UPDATE possesso "
+					+ "SET notificheFertilizzante = ? "
 					+ "WHERE id = ?");
-			updatePossesso.setLong(1, new java.util.Date().getTime());
-			updatePossesso.setInt(2, input.getInt("idPossesso"));
-			updatePossesso.executeUpdate();
+			
+			setNotifiche.setBoolean(1, input.getBoolean("notificheFertilizzante"));
+			setNotifiche.setInt(2, input.getInt("idPossesso"));
+			setNotifiche.executeUpdate();
 			
 			response.getWriter().write(new JSONObject().toString());
 			
-			updatePossesso.close();
+			setNotifiche.close();
 			conn.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		} 
 		catch (JSONException e1) {
 			e1.printStackTrace();
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
-		} 
-		catch (ClassNotFoundException e2) {
+		}
+		catch (SQLException e2) {
 			e2.printStackTrace();
+			
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+		}
+		catch (ClassNotFoundException e3) {
+			e3.printStackTrace();
 			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 	}
