@@ -18,8 +18,10 @@ import javax.servlet.http.HttpServletResponse;
  
 
 
+
 import org.json.simple.JSONObject;
  
+
 
 
 import com.forgetmenot.database.ConnectionManager;
@@ -43,7 +45,7 @@ public class GetDettagliPiantaUser extends HttpServlet {
          */
         @SuppressWarnings("unchecked")
 		protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-                // TODO Auto-generated method stub
+        		// TODO Auto-generated method stub
                
                 //prende come parametro l'id del Possesso(entità che collega un user alla sua pianta)
                 int id=Integer.parseInt(request.getParameter("id"));
@@ -65,15 +67,17 @@ public class GetDettagliPiantaUser extends HttpServlet {
                
                 JSONObject obj=new JSONObject();
                 obj.put("dataUltimaAcqua", new Date(rs.getLong("dataUltimaAcqua")).toString());
-                        obj.put("dataUltimoFertilizzante", new Date(rs.getLong("dataUltimoFertilizzante")).toString());
-                        obj.put("acqua", rs.getInt("acqua"));
-                        obj.put("intervalloConcimazione", rs.getInt("intervalloConcimazione"));
-                        obj.put("luce",rs.getInt("luce"));
-                        obj.put("descrizioneAcqua",rs.getString("descrizioneAcqua"));
-                        obj.put("descrizioneConcimazione",rs.getString("descrizioneConcimazione"));
-                        obj.put("gpslat", rs.getFloat("GPSLat"));
-                        obj.put("gpslong", rs.getFloat("GPSLong"));
-                        obj.put("indirizzo", rs.getString("indirizzo"));
+                obj.put("dataUltimoFertilizzante", new Date(rs.getLong("dataUltimoFertilizzante")).toString());
+                obj.put("acqua", rs.getInt("acqua"));
+                obj.put("intervalloConcimazione", rs.getInt("intervalloConcimazione"));
+                obj.put("luce",rs.getInt("luce"));
+                obj.put("descrizioneAcqua",rs.getString("descrizioneAcqua"));
+                obj.put("descrizioneConcimazione",rs.getString("descrizioneConcimazione"));
+                obj.put("gpslat", rs.getFloat("GPSLat"));
+                obj.put("gpslong", rs.getFloat("GPSLong"));
+                obj.put("indirizzo", rs.getString("indirizzo"));
+                obj.put("livelloAcqua", Utils.calcolaLivello(rs.getLong("dataUltimaAcqua"), rs.getInt("acqua")));
+        		obj.put("livelloConcimazione", Utils.calcolaLivello(rs.getLong("dataUltimoFertilizzante"), rs.getInt("intervalloConcimazione")));
                        
                 //String jsonText = out.toString();
                 String jsonText = obj.toString();
