@@ -44,7 +44,8 @@ public class GetElencoTipiPiante extends HttpServlet {
 			conn = ConnectionManager.getConnection();
 			stmt = conn.createStatement();
 			String query = "SELECT nome, immagine "
-					+ "FROM pianta";
+					+ "FROM pianta "
+					+ "ORDER BY nome";
 			ResultSet rs = stmt.executeQuery(query);
 			JSONArray result = new JSONArray();
 			while (rs.next()) {
