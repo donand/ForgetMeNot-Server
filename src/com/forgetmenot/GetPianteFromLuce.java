@@ -54,6 +54,7 @@ public class GetPianteFromLuce extends HttpServlet {
     		String jsonText = a.toString();
     		
             //System.out.print(jsonText);
+    		response.setContentType("application/json; charset=UTF-8");
             OutputStreamWriter outR = new OutputStreamWriter(response.getOutputStream());
             outR.write(jsonText);
             outR.flush();

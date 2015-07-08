@@ -64,7 +64,7 @@ public class GetDatiGeneraliPianta extends HttpServlet {
 			System.out.println(obj.get("nome"));
     		//String jsonText = out.toString();
     		String jsonText = obj.toString();
-            System.out.print(jsonText);
+    		response.setContentType("application/json; charset=UTF-8");
             OutputStreamWriter outR = new OutputStreamWriter(response.getOutputStream());
             outR.write(jsonText);
             outR.flush();

@@ -80,6 +80,7 @@ public class RegistraUtente extends HttpServlet {
     		
 			JSONObject res = new JSONObject();
 			res.put("id", id);
+			response.setContentType("application/json; charset=UTF-8");
 			response.getWriter().write(res.toString());
         }
         catch(ClassNotFoundException e){

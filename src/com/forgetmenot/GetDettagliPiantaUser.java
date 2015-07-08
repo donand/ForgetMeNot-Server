@@ -83,8 +83,10 @@ public class GetDettagliPiantaUser extends HttpServlet {
             obj.put("notificheAcqua", rs.getBoolean("notificheAcqua"));
             obj.put("notificheFertilizzante",  rs.getBoolean("notificheFertilizzante"));
             
+            
             //String jsonText = out.toString();
             String jsonText = obj.toString();
+            response.setContentType("application/json; charset=UTF-8");
             OutputStreamWriter outR = new OutputStreamWriter(response.getOutputStream());
             outR.write(jsonText);
             outR.flush();

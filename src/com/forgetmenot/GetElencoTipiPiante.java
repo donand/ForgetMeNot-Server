@@ -53,6 +53,7 @@ public class GetElencoTipiPiante extends HttpServlet {
 				obj.put("immagine", rs.getString("immagine"));
 				result.put(obj);
 			}
+			response.setContentType("application/json; charset=UTF-8");
 			response.getWriter().write(result.toString());
 		}
 		catch (SQLException e) {

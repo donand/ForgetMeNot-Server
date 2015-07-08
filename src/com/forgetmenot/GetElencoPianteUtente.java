@@ -76,6 +76,7 @@ public class GetElencoPianteUtente extends HttpServlet {
 				result.add(obj);
 			}
 			
+			response.setContentType("application/json; charset=UTF-8");
 			response.getWriter().write(result.toString());
 			
 			rs.close();
