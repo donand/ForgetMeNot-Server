@@ -47,7 +47,6 @@ public class GetDatiGeneraliPianta extends HttpServlet {
     		ResultSet rs= stmt.executeQuery();
     		//StringWriter out=new StringWriter();
     		rs.next();
-    		System.out.println(rs.getString("nome"));
     		JSONObject obj=new JSONObject();
     		
     		obj.put("nome",rs.getString("nome"));
@@ -62,6 +61,7 @@ public class GetDatiGeneraliPianta extends HttpServlet {
             obj.put("terreno",rs.getString("terreno"));
             
 			System.out.println(obj.get("nome"));
+			System.out.println(rs.getString("descrizione"));
     		//String jsonText = out.toString();
     		String jsonText = obj.toString();
     		response.setContentType("application/json; charset=UTF-8");
@@ -74,6 +74,8 @@ public class GetDatiGeneraliPianta extends HttpServlet {
             con.close();
         }
         catch(ClassNotFoundException e){
+        	e.printStackTrace();
+        	response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
         catch(SQLException e){
         	e.printStackTrace();

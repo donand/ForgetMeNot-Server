@@ -11,7 +11,7 @@ public class ConnectionManager {
     private static final String MY_DRIVER = "org.postgresql.Driver";
     private static final String MY_URL = "jdbc:postgresql://localhost/ForgetMeNot";
     private static final String LOGIN = "postgres";
-    private static final String PASSWD = "postgres";
+    private static final String PASSWD = "mecellONE";
     
 	public static Connection getConnection() throws SQLException, ClassNotFoundException {
 		if (!driverLoaded) {
